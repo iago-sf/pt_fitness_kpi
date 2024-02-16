@@ -8,6 +8,11 @@ const routes = [
     component: () => import("@/views/Home.vue"),
   },
   {
+    path: "/s/:id",
+    name: "RedirectShortedUrl",
+    component: () => import("@/views/RedirectShortedUrl.vue"),
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("@/views/Login.vue"),
