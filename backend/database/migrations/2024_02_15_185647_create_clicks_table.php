@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('clicks', function (Blueprint $table) {
             $table->id();
+            $table->string('user_agent')->nullable();
+            $table->string('ip')->nullable();
+            $table->string('country')->nullable();
+
+            $table->foreignId('link_id')->constrained('links')->cascadeOnDelete();
             $table->timestamps();
         });
     }
