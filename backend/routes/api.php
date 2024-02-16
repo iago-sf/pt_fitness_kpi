@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/redirect/{id}', [LinkController::class, 'getLink']);
 Route::post('/store-url', [LinkController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
