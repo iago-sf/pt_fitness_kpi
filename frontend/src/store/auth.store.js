@@ -1,10 +1,9 @@
 import { defineStore } from "pinia"
 
-// este auth store guarda un token, si el token existe el usuario esta autenticado y devolvera true si no existe devolvera false
 export const useAuthStore = defineStore({
   id: "auth",
   state: () => ({
-    token: null,
+    token: localStorage.getItem("token"),
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
@@ -12,6 +11,11 @@ export const useAuthStore = defineStore({
   actions: {
     setToken(token) {
       this.token = token
+      localStorage.setItem("token", token)
+    },
+    removeToken() {
+      this.token = null
+      localStorage.removeItem("token")
     },
   },
 })

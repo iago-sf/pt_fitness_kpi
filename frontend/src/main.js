@@ -11,6 +11,8 @@ import { useAuthStore } from "./store/auth.store"
 const app = createApp(App)
 const pinia = createPinia()
 
+app.use(router).use(pinia).mount("#app")
+
 axios.defaults.baseURL = "http://localhost:8000"
 axios.defaults.withCredentials = true
 axios.defaults.withXSRFToken = true
@@ -27,10 +29,17 @@ axios.interceptors.response.use(
   (error) => error
 )
 
+axios.interceptors.request.use((config) => {
+  const authStore = useAuthStore()
+  if (authStore.token) {
+    config.headers.Authorization = `Bearer ${authStore.token}`
+  }
+
+  return config
+})
+
 try {
   await axios.get(`/sanctum/csrf-cookie`)
 } catch (error) {
   console.error("Unable to get CSRF token", error)
 }
-
-app.use(router).use(pinia).mount("#app")

@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\LinkController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/store-url', [LinkController::class, 'store']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
 });
