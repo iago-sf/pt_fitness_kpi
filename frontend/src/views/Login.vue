@@ -16,8 +16,16 @@ const formData = ref({
 
 const submit = async () => {
   try {
-    let { data } = await axios.post("/login", formData.value)
-    console.log("data", data)
+    let { status } = await axios.post("/login", formData.value)
+
+    if (status >= 200 && status < 300) {
+      formData.value = {
+        email: "",
+        password: "",
+      }
+
+      router.push({ path: "/" })
+    }
   } catch (error) {
     errors.value = error.errors
   }
