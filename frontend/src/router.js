@@ -49,15 +49,15 @@ router.beforeEach((to, from, next) => {
   if (authStore.isAuthenticated) {
     if (to.name == "Login" || to.name == "Register") {
       next({ name: "Home" })
+    } else {
+      next()
     }
-
-    next()
   } else {
     if (to.name == "Dashboard") {
       next({ name: "Login" })
+    } else {
+      next()
     }
-
-    next()
   }
 })
 

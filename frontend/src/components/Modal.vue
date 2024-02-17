@@ -16,7 +16,7 @@ const modalState = computed({
   <div :class="modalState ? 'block' : 'hidden'">
     <div class="fixed inset-0 bg-black bg-opacity-50 z-50">
       <div class="fixed inset-0 flex justify-center items-center">
-        <div class="bg-primer p-4 w-1/2 rounded-md">
+        <div class="bg-primer p-4 w-[90%] md:w-1/2 rounded-md">
           <div class="flex justify-between">
             <h1 class="text-secun text-3xl font-bold">
               {{ props.title }}

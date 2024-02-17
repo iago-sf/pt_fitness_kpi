@@ -18,7 +18,6 @@ const submit = async () => {
   if (!form.value) return
 
   const { data } = await axios.post("/api/store-url", { url: url.value })
-  console.log("data", data)
 
   shortedURL.value = window.location.origin + "/s/" + data.code
 }

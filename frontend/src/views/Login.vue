@@ -63,7 +63,9 @@ watch(
 
 <template>
   <div class="bg-primer h-screen w-full flex flex-wrap justify-center items-center">
-    <div class="bg-secun w-[90%] h-1/2 md:w-1/2 lg:w-1/4 px-10 rounded shadow-xl transition-all">
+    <div
+      class="bg-secun w-[90%] h-3/4 md:h-1/2 md:w-1/2 lg:w-1/4 px-10 rounded shadow-xl transition-all"
+    >
       <div class="flex flex-wrap justify-center items-center h-full">
         <form class="w-full inline-block" @submit.prevent="submit">
           <h1 class="text-center text-3xl my-4">Login</h1>
