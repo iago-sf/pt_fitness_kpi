@@ -2,6 +2,11 @@
 import { computed, ref, watch } from "vue"
 import axios from "axios"
 import Navbar from "@/components/Navbar.vue"
+import { useNotificationStore } from "@/store/notification.store"
+
+const notiStore = useNotificationStore()
+const url = ref("")
+const shortedURL = ref("")
 
 const errors = ref({
   url: null,
@@ -11,15 +16,19 @@ const form = computed(() => {
   if (!url.value) return false
   return true
 })
-const url = ref("")
-const shortedURL = ref("")
 
 const submit = async () => {
   if (!form.value) return
 
-  const { data } = await axios.post("/api/store-url", { url: url.value })
+  try {
+    const { data } = await axios.post("/api/store-url", { url: url.value })
 
-  shortedURL.value = window.location.origin + "/s/" + data.code
+    shortedURL.value = window.location.origin + "/s/" + data.code
+
+    notiStore.setNotification("URL shorted successfully", "success")
+  } catch (error) {
+    notiStore.setNotification("An error occurred while shorting the URL", "error")
+  }
 }
 
 watch(
@@ -44,10 +53,20 @@ watch(
     >
       <div class="flex flex-wrap items-center w-full h-full scale-125">
         <div class="w-full text-center px-5">
-          <h1 class="text-secun font-bold text-4xl">Shorten your URL</h1>
+          <h1 class="text-secun font-bold text-4xl">
+            {{ shortedURL.length > 0 ? "Here is your shorted URL:" : "Shorten your URL" }}
+          </h1>
 
           <p v-if="shortedURL.length > 0" class="text-secun font-semibold text-lg">
-            Your shorted URL is: <a :href="shortedURL">{{ shortedURL }}</a>
+            <a
+              :href="shortedURL"
+              class="font-bold group transition duration-500 inline-block w-fit"
+            >
+              {{ shortedURL }}
+              <span
+                class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-secun"
+              ></span>
+            </a>
           </p>
           <p v-else class="text-secun font-semibold text-lg">
             Enter your URL and get a shortened version

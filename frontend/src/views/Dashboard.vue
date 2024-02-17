@@ -4,7 +4,9 @@ import { useRouter } from "vue-router"
 import axios from "axios"
 import Navbar from "@/components/Navbar.vue"
 import Modal from "@/components/Modal.vue"
+import { useNotificationStore } from "@/store/notification.store"
 
+const notiStore = useNotificationStore()
 const router = useRouter()
 const baseURL = window.location.origin
 const user = ref(null)
@@ -53,10 +55,11 @@ const onEdit = async () => {
 
     if (status === 200) {
       editModal.value = false
+      notiStore.setNotification("URL updated successfully", "success")
       getUserURLs()
     }
   } catch (error) {
-    console.log(error)
+    notiStore.setNotification("An error occurred while updating the URL", "error")
   }
 }
 
@@ -71,10 +74,11 @@ const onDelete = async () => {
 
     if (status === 200) {
       deleteModal.value = false
+      notiStore.setNotification("URL deleted successfully", "success")
       getUserURLs()
     }
   } catch (error) {
-    console.log(error)
+    notiStore.setNotification("An error occurred while deleting the URL", "error")
   }
 }
 

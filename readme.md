@@ -8,19 +8,20 @@ El proyecto se divide en dos partes, un backend creado con Laravel y un frontend
 
 ### Librerias del backend
 
-- Laravel 10
-- Laravel Sanctum
-- Laravel Breeze
+- Laravel 10: https://laravel.com/
+- Laravel Sanctum: https://laravel.com/docs/10.x/sanctum
+- Laravel Breeze: https://laravel.com/docs/10.x/starter-kits
 
 ### Librerias del frontend
 
-- Vue 3
-- Vue Router
-- Vite
-- TailwindCSS
-- Axios
-- Pinia
-- GSAP
+- Vue 3: https://v3.vuejs.org/
+- Vue Router: https://router.vuejs.org/
+- Vite: https://vitejs.dev/
+- TailwindCSS: https://tailwindcss.com/
+- Axios: https://axios-http.com/
+- Pinia: https://pinia.esm.dev/
+- GSAP: https://greensock.com/gsap/
+- Vue Toast Notification: https://github.com/ankurk91/vue-toast-notification
 
 ## Configuración y puesta en marcha
 
@@ -58,4 +59,3 @@ Al registrarse se les pedirá un nombre de usuario, un email y una contraseña, 
 Al loguearse se les redirigirá a la página de inicio, pero ahora podrán ver un listado de todas las URLs que han acortado y el número de veces que han sido visitadas al entrar en el apartado Dashboard del usuario, además de disfrutar de acceso ilimitado a los links.
 
 ![Página de dashboard](readme/images/dashboard.png)
-

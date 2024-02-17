@@ -1,17 +1,18 @@
 import { createApp } from "vue"
 import { createPinia } from "pinia"
+import ToastPlugin from "vue-toast-notification"
 import axios from "axios"
-import "./style.css"
+import "@/style.css"
 
 import router from "./router"
 import App from "./App.vue"
 
-import { useAuthStore } from "./store/auth.store"
+import { useAuthStore } from "@/store/auth.store"
 
 const app = createApp(App)
 const pinia = createPinia()
 
-app.use(router).use(pinia).mount("#app")
+app.use(router).use(pinia).use(ToastPlugin).mount("#app")
 
 axios.defaults.baseURL = "http://localhost:8000"
 axios.defaults.withCredentials = true

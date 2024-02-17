@@ -2,6 +2,9 @@
 import axios from "axios"
 import { computed, ref, watch } from "vue"
 import { useRouter } from "vue-router"
+import { useNotificationStore } from "@/store/notification.store"
+
+const notiStore = useNotificationStore()
 
 const router = useRouter()
 const errors = ref({
@@ -24,22 +27,27 @@ const submit = async () => {
   if (!form.value) return
 
   try {
-    let { status } = await axios.post("/login", formData.value)
+    let response = await axios.post("/login", formData.value)
 
-    if (status >= 200 && status < 300) {
+    if (response.status >= 200 && response.status < 300) {
       formData.value = {
         email: "",
         password: "",
       }
 
+      notiStore.setNotification("Logged in successfully", "success")
       router.push({ path: "/" })
     }
-  } catch (error) {
-    const { data } = error.response
 
-    if (data.error == "Already authenticated") router.push({ path: "/" })
-    if (data.errors) errors.value = data.errors
-  }
+    const { data } = response?.response
+    if (data) {
+      notiStore.setNotification(data.message, "error")
+
+      Object.keys(data.errors).forEach((key) => {
+        errors.value[key] = data.errors[key] ? data.errors[key][0] : null
+      })
+    }
+  } catch (err) {}
 }
 
 watch(
