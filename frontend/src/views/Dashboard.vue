@@ -41,14 +41,30 @@ const errors = ref({
 })
 
 const editModal = ref(false)
+const deleteModal = ref(false)
+const detailsModal = ref(false)
 const linkToEdit = ref({
   id: null,
   url: null,
 })
-const showEditModal = (e) => {
+
+const showModal = (e, type = "details", callback = null) => {
   linkToEdit.value = { ...e }
-  editModal.value = true
+
+  switch (type) {
+    case "edit":
+      editModal.value = true
+      break
+    case "details":
+      callback && callback()
+      detailsModal.value = true
+      break
+    case "delete":
+      deleteModal.value = true
+      break
+  }
 }
+
 const onEdit = async () => {
   try {
     const { data, status } = await axios.put("/api/update-url", linkToEdit.value)
@@ -63,11 +79,6 @@ const onEdit = async () => {
   }
 }
 
-const deleteModal = ref(false)
-const showDeleteModal = (e) => {
-  linkToEdit.value = { ...e }
-  deleteModal.value = true
-}
 const onDelete = async () => {
   try {
     const { status } = await axios.delete("/api/delete-url/" + linkToEdit.value.id)
@@ -80,6 +91,37 @@ const onDelete = async () => {
   } catch (error) {
     notiStore.setNotification("An error occurred while deleting the URL", "error")
   }
+}
+
+const clicks = ref({
+  dates: {},
+  user_agents: {},
+})
+const groupClicksInfo = (clk) => {
+  clicks.value.dates = clk.reduce((acc, curr) => {
+    const date = new Date(curr.created_at).toLocaleDateString()
+
+    if (!acc[date]) {
+      acc[date] = 1
+    } else {
+      acc[date]++
+    }
+
+    return acc
+  }, {})
+
+  clicks.value.user_agents = clk.reduce((acc, curr) => {
+    let arr_agent = curr.user_agent.split(" ")
+    curr.user_agent = arr_agent[arr_agent.length - 1]
+
+    if (!acc[curr.user_agent]) {
+      acc[curr.user_agent] = 1
+    } else {
+      acc[curr.user_agent]++
+    }
+
+    return acc
+  }, {})
 }
 
 watch(
@@ -118,6 +160,39 @@ watch(
     </Modal>
 
     <Modal
+      :show="detailsModal"
+      title="Details"
+      actionText="Close"
+      @close="detailsModal = false"
+      @action="detailsModal = false"
+    >
+      <p v-if="linkToEdit.clicks_count == 0" class="text-secun font-semibold text-xl text-center">
+        No visits yet
+      </p>
+      <div v-else class="overflow-hidden">
+        <div class="mb-4">
+          <p class="text-secun font-semibold text-xl">
+            Total visits: <span class="text-secun font-normal">{{ linkToEdit.clicks_count }}</span>
+          </p>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-secun font-semibold text-xl">Clicks by date:</p>
+          <ul class="text-secun">
+            <li v-for="(value, key) in clicks.dates" :key="key">{{ key }}: {{ value }}</li>
+          </ul>
+        </div>
+
+        <div class="mb-4">
+          <p class="text-secun font-semibold text-xl">Clicks by browser:</p>
+          <ul class="text-secun">
+            <li v-for="(value, key) in clicks.user_agents" :key="key">{{ key }}: {{ value }}</li>
+          </ul>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal
       :show="deleteModal"
       title="Delete"
       actionText="Delete"
@@ -135,38 +210,50 @@ watch(
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-5 my-5">
-      <div v-for="link in links" :key="link.id" class="bg-secun p-4 rounded shadow overflow-hidden">
-        <p class="text-primer mb-4">
-          <span>Your URL:</span>
-          <span class="font-semibold" @click="hidden = !hidden">{{
-            " " + hideText(link.url, link.id)
-          }}</span>
-        </p>
-        <p class="text-primer mb-4">
-          <span>Shorted URL:</span>
-          <router-link
-            :to="`/s/${link.code}`"
-            class="font-semibold transition-colors hover:underline"
-          >
-            {{ " " + baseURL }}/s/{{ link.code }}
-          </router-link>
-        </p>
+      <div
+        v-for="link in links"
+        :key="link.id"
+        class="bg-secun p-4 rounded shadow overflow-hidden flex flex-col justify-between h-full"
+      >
+        <div>
+          <p class="text-primer mb-4">
+            <span>Your URL:</span>
+            <span class="font-semibold" @click="hidden = !hidden">{{
+              " " + hideText(link.url, link.id)
+            }}</span>
+          </p>
+          <p class="text-primer mb-4">
+            <span>Shorted URL:</span>
+            <router-link
+              :to="`/s/${link.code}`"
+              class="font-semibold transition-colors hover:underline"
+            >
+              {{ " " + baseURL }}/s/{{ link.code }}
+            </router-link>
+          </p>
 
-        <p class="text-primer mb-4">
-          <span>Visits:</span>
-          <span class="font-semibold">{{ " " + link.clicks_count }}</span>
-        </p>
+          <p class="text-primer mb-4">
+            <span>Visits:</span>
+            <span class="font-semibold">{{ " " + link.clicks_count }}</span>
+          </p>
+        </div>
 
-        <div class="flex fle-warp gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button
-            class="w-full text-primer font-semibold py-2 px-4 border border-primer hover:bg-primer hover:text-secun rounded shadow transition-colors"
-            @click="showEditModal(link)"
+            class="text-primer font-semibold py-2 px-4 border border-primer bg-white hover:bg-primer hover:text-secun rounded shadow transition-colors"
+            @click="showModal(link, 'edit')"
           >
             Edit
           </button>
           <button
-            class="w-full text-primer font-semibold py-2 px-4 border border-primer hover:bg-primer hover:text-secun rounded shadow transition-colors"
-            @click="showDeleteModal(link)"
+            class="text-primer font-semibold py-2 px-4 border border-primer bg-white hover:bg-primer hover:text-secun rounded shadow transition-colors"
+            @click="showModal(link, 'details', groupClicksInfo(link.clicks))"
+          >
+            Details
+          </button>
+          <button
+            class="text-primer font-semibold py-2 px-4 border border-primer bg-white hover:bg-primer hover:text-secun rounded shadow transition-colors"
+            @click="showModal(link, 'delete')"
           >
             Delete
           </button>

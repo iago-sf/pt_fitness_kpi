@@ -17,6 +17,10 @@ class Click extends Model
         'link_id' => 'integer',
     ];
 
+    protected $hidden = [
+        'updated_at',
+    ];
+
     public function link()
     {
         return $this->belongsTo(Link::class);

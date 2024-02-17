@@ -59,3 +59,11 @@ Al registrarse se les pedirá un nombre de usuario, un email y una contraseña, 
 Al loguearse se les redirigirá a la página de inicio, pero ahora podrán ver un listado de todas las URLs que han acortado y el número de veces que han sido visitadas al entrar en el apartado Dashboard del usuario, además de disfrutar de acceso ilimitado a los links.
 
 ![Página de dashboard](readme/images/dashboard.png)
+
+En la página de dashboard podrán ver un listado de todas las URLs que han acortado y el número de veces que han sido visitadas, además de poder gestionar las URLs pudiendo editarlas o eliminarlas si así lo desean.
+
+![Página de dashboard](readme/images/modal.png)
+
+Además encontraremos un apartado de información, aquí podremos ver información sobre los clicks, como el número de clicks totales, el número de clicks por fecha y el número de clicks por navegador.
+
+![Página de información](readme/images/detalles.png)
