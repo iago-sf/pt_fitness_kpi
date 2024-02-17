@@ -18,4 +18,7 @@ Route::get('/redirect/{id}', [LinkController::class, 'getLink']);
 Route::post('/store-url', [LinkController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/get-urls', [LinkController::class, 'getUrls']);
+    Route::put('/update-url', [LinkController::class, 'update']);
+    Route::delete('/delete-url/{id}', [LinkController::class, 'delete']);
 });

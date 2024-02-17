@@ -1,8 +1,7 @@
 <script setup>
 import { computed, ref, watch } from "vue"
-import { useAuthStore } from "../store/auth.store"
 import axios from "axios"
-const authStore = useAuthStore()
+import Navbar from "@/components/Navbar.vue"
 
 const errors = ref({
   url: null,
@@ -39,25 +38,8 @@ watch(
 
 <template>
   <div class="bg-primer h-screen w-full relative justify-center items-center">
-    <div v-if="authStore.isAuthenticated" class="p-4 flex flex-wrap justify-end space-x-4">
-      <router-link
-        to="/logout"
-        class="text-secun font-semibold py-2 px-4 border border-secun hover:bg-secun hover:text-primer rounded shadow transition-colors"
-        >Logout</router-link
-      >
-    </div>
-    <div v-else class="p-4 flex flex-wrap justify-end space-x-4">
-      <router-link
-        to="/login"
-        class="text-secun font-semibold py-2 px-4 border border-secun hover:bg-secun hover:text-primer rounded shadow transition-colors"
-        >Login</router-link
-      >
-      <router-link
-        to="/register"
-        class="text-secun font-semibold py-2 px-4 border border-secun hover:bg-secun hover:text-primer rounded shadow transition-colors"
-        >Register</router-link
-      >
-    </div>
+    <Navbar />
+
     <div
       class="absolute w-full h-1/2 md:w-1/2 md:translate-x-1/2 translate-y-1/2 px-10 rounded transition-all"
     >

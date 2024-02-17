@@ -23,6 +23,11 @@ const routes = [
     component: () => import("@/views/Register.vue"),
   },
   {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: () => import("@/views/Dashboard.vue"),
+  },
+  {
     path: "/logout",
     name: "Logout",
     component: () => import("@/views/Logout.vue"),
@@ -41,9 +46,17 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
-  if (authStore.isAuthenticated && (to.name == "Login" || to.name == "Register")) {
-    next({ name: "Home" })
+  if (authStore.isAuthenticated) {
+    if (to.name == "Login" || to.name == "Register") {
+      next({ name: "Home" })
+    }
+
+    next()
   } else {
+    if (to.name == "Dashboard") {
+      next({ name: "Login" })
+    }
+
     next()
   }
 })

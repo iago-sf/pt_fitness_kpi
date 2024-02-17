@@ -2,9 +2,10 @@
 import { onMounted, ref } from "vue"
 import gsap from "gsap"
 import axios from "axios"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 
 const route = useRoute()
+const router = useRouter()
 
 const loaded = ref(false)
 const tl = ref(null)
@@ -44,15 +45,20 @@ function resolveAnimation() {
 }
 
 onMounted(() => {
+  loaded.value = true
   playLoadingAnimation()
   getRedirect()
 })
 
 const getRedirect = async () => {
-  const { data } = await axios.get("/api/redirect/" + route.params.id)
+  try {
+    const { data } = await axios.get("/api/redirect/" + route.params.id)
 
-  if (data.url) window.location.href = data.url
-  else window.location.href = "/"
+    if (data.url) window.location.href = data.url
+    else router.push("/")
+  } catch (error) {
+    router.push("/")
+  }
 }
 </script>
 

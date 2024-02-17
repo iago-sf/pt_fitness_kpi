@@ -63,4 +63,63 @@ class LinkController extends Controller
 
         return response()->json($link, 201);
     }
+
+    public function getUrls(Request $request)
+    {
+        $user = $this->getAuthUser($request->bearerToken());
+
+        if ($user) {
+            $links = Link::where('user_id', $user->id)->with('clicks')->withCount('clicks')->get();
+            return response()->json([
+                'user' => $user,
+                'links' => $links
+            ], 200);
+        }
+
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'url' => 'required|url'
+        ]);
+
+        $user = $this->getAuthUser($request->bearerToken());
+
+        if ($user) {
+            $link = Link::find($request->id);
+
+            if ($link->user_id === $user->id) {
+                $link->url = $request->url;
+                $link->save();
+
+                Click::where('link_id', $link->id)->delete();
+
+                return response()->json($link, 200);
+            }
+        }
+
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $user = $this->getAuthUser($request->bearerToken());
+
+        if ($user) {
+            $link = Link::find($id);
+
+            if ($link->user_id === $user->id) {
+                $link->delete();
+
+                return response()->json(['message' => 'Link deleted'], 200);
+            }
+
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
 }
